@@ -14,4 +14,4 @@ function createSharedAccessToken(uri, saName, saKey) {
     return 'SharedAccessSignature sr=' + encoded + '&sig=' +  
         encodeURIComponent(hash) + '&se=' + ttl + '&skn=' + saName; 
 }
-console.log(createSharedAccessToken("Magic-IoT.azure-devices.net","MagicBit1","wwaPObxyg6S37VMpeVY2yH1GbZAv/A8QWj3WbT+Qcsw="));
+console.log(createSharedAccessToken("Magic-IoT.azure-devices.net","MagicBit1","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"));
