@@ -2,7 +2,8 @@ var utf8=require("utf8");
 var crypto=require("crypto");
 function createSharedAccessToken(uri, saName, saKey) { 
     if (!uri || !saName || !saKey) { 
-            throw "Missing required parameter"; 
+           console.log("Usage: node generateSAS.js <IoT Hub Host name> <Device ID> <Shared Access Key>")
+           process.exit();
         } 
     var encoded = encodeURIComponent(uri); 
     var now = new Date(); 
@@ -14,4 +15,4 @@ function createSharedAccessToken(uri, saName, saKey) {
     return 'SharedAccessSignature sr=' + encoded + '&sig=' +  
         encodeURIComponent(hash) + '&se=' + ttl + '&skn=' + saName; 
 }
-console.log(createSharedAccessToken("Magic-IoT.azure-devices.net","MagicBit1","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"));
+console.log(createSharedAccessToken(process.argv[2],process.argv[3],process.argv[4]));

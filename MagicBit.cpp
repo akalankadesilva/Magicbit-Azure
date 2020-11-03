@@ -112,9 +112,14 @@ bool MagicBit::mqttInit() {
       sprintf(tempBuff,"devices/%s/messages/devicebound/#",mConfig.deviceId);
       ret=mqtt->subscribe(tempBuff);
       Serial.println(ret);
-      Serial.print(F("Subscribing DT: "));
+      Serial.print(F("Subscribing DT Res: "));
      memset(tempBuff,0,sizeof(tempBuff));
       strcpy(tempBuff,"$iothub/twin/res/#");
+      ret=mqtt->subscribe(tempBuff);
+      Serial.println(ret);
+      Serial.print(F("Subscribing DT: "));
+     memset(tempBuff,0,sizeof(tempBuff));
+      strcpy(tempBuff,"$iothub/twin/PATCH/properties/desired/#");
       ret=mqtt->subscribe(tempBuff);
       Serial.println(ret);
       Serial.print("Requesting DT:");
@@ -122,6 +127,7 @@ bool MagicBit::mqttInit() {
       strcpy(tempBuff,"$iothub/twin/GET/?$rid=1");
       ret=mqtt->publish(tempBuff," ",1);
       Serial.println(ret);
+      
       free(tempBuff);
     }
 
