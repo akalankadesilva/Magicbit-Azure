@@ -70,6 +70,15 @@ void MagicBit::init() {
 
 bool MagicBit::wifiInit() {
   if (strlen(mConfig.ssid) > 0 && strlen(mConfig.wifiPassword) > 0) {
+    int nwCount = WiFi.scanNetworks();   
+    bool ssidFound=false;
+    for(int i=0;i<nwCount;i++){    
+      if(strcmp(mConfig.ssid,WiFi.SSID(i).c_str())==0){
+        ssidFound=true;
+      }
+    }
+    if(!ssidFound)
+      return false;
     unsigned long start = millis();
     Serial.print("Connecting to ");
     Serial.println(mConfig.ssid);
@@ -78,14 +87,21 @@ bool MagicBit::wifiInit() {
       delay(1000);
       Serial.print(".");
     }
-    return WiFi.status() == WL_CONNECTED;
+
+    if(WiFi.status() != WL_CONNECTED){
+      WiFi.disconnect();
+      return false;
+    }
+    else{
+      return true;
+    }
   }
   return false;
 }
 
 bool MagicBit::mqttInit() {
   if (strlen(mConfig.deviceId) > 0 && strlen(mConfig.key) > 0) {
-    isSetup = true;
+    
     Serial.print("Connecting to Azure..");
     Serial.print("Device ID:");
     Serial.println(mConfig.deviceId);
@@ -169,16 +185,15 @@ void MagicBit::loop() {
     txLength = 0;
     lastTx = millis();
   }
-  if (millis() - lastWiFiCheck > 10000 || millis() < lastWiFiCheck) {
+  if (millis() - lastWiFiCheck > 60000 || millis() < lastWiFiCheck) {
+      lastWiFiCheck = millis();
+   
 
-    lastWiFiCheck = millis();
-    if (!isSetup)
-      return;
     if (WiFi.status() != WL_CONNECTED) {
 
       wifiInit();
     }
-    if (mqtt->connected())
+    if (mqtt!=NULL &&mqtt->connected())
       displayIcons(1);
     else {
       displayIcons(2);
